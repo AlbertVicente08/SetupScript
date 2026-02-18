@@ -1,8 +1,7 @@
 "use client";
 
 import { App } from "@/data/apps";
-import * as LucideIcons from "lucide-react";
-import { LucideIcon, Check, Star } from "lucide-react";
+import { Check, Star } from "lucide-react";
 
 interface AppCardProps {
   app: App;
@@ -10,13 +9,8 @@ interface AppCardProps {
   onToggle: (id: string) => void;
 }
 
-function getIcon(iconName: string): LucideIcon {
-  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
-  return icons[iconName] || LucideIcons.HelpCircle;
-}
-
 export default function AppCard({ app, isSelected, onToggle }: AppCardProps) {
-  const Icon = getIcon(app.icon);
+  const isUrl = app.icon?.startsWith("http");
 
   return (
     <button
@@ -51,11 +45,22 @@ export default function AppCard({ app, isSelected, onToggle }: AppCardProps) {
         <div
           className={`flex h-10 w-10 items-center justify-center rounded-lg transition-all duration-200 ${
             isSelected
-              ? "bg-neon-red/20 text-neon-red"
-              : "bg-[#1a1a1a] text-gray-400 group-hover:text-neon-magenta"
+              ? "bg-neon-red/20"
+              : "bg-[#1a1a1a] group-hover:bg-[#222]"
           }`}
         >
-          <Icon className="h-5 w-5" />
+          {isUrl ? (
+            <img
+              src={app.icon}
+              alt={app.name}
+              className="w-6 h-6 object-contain"
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = "none";
+              }}
+            />
+          ) : (
+            <span className="text-xl">{app.icon || "📦"}</span>
+          )}
         </div>
         <div>
           <h3

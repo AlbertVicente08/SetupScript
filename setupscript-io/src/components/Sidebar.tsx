@@ -4,10 +4,8 @@ import { AppCategory, CATEGORY_LABELS, CATEGORY_ICONS } from "@/data/apps";
 import {
   TweakCategory,
   TWEAK_CATEGORY_LABELS,
-  TWEAK_CATEGORY_ICONS,
 } from "@/data/tweaks";
-import * as LucideIcons from "lucide-react";
-import { LucideIcon, Layers, Settings } from "lucide-react";
+import { Layers, Settings } from "lucide-react";
 
 interface SidebarProps {
   activeCategory: AppCategory | "all";
@@ -18,10 +16,24 @@ interface SidebarProps {
   selectedTweakCountByCategory: Record<string, number>;
 }
 
-function getIcon(iconName: string): LucideIcon {
-  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
-  return icons[iconName] || LucideIcons.HelpCircle;
-}
+const appCategories: { id: AppCategory | "all"; label: string; emoji: string }[] = [
+  { id: "all", label: "Todas", emoji: "⚡" },
+  { id: "browsers", label: "Navegadores", emoji: "🌐" },
+  { id: "devtools", label: "Dev Tools", emoji: "💻" },
+  { id: "gaming", label: "Gaming", emoji: "🎮" },
+  { id: "creativity", label: "Creatividad", emoji: "🎨" },
+  { id: "multimedia", label: "Multimedia", emoji: "🎵" },
+  { id: "communication", label: "Comunicación", emoji: "💬" },
+  { id: "utilities", label: "Utilidades", emoji: "🔧" },
+];
+
+const tweakCategories: { id: TweakCategory | "all"; label: string; emoji: string }[] = [
+  { id: "all", label: "Todos", emoji: "⚙️" },
+  { id: "privacy", label: "Privacidad", emoji: "🔒" },
+  { id: "performance", label: "Rendimiento", emoji: "⚡" },
+  { id: "appearance", label: "Apariencia", emoji: "🎨" },
+  { id: "bloatware", label: "Bloatware", emoji: "🗑️" },
+];
 
 export default function Sidebar({
   activeCategory,
@@ -31,24 +43,6 @@ export default function Sidebar({
   selectedCountByCategory,
   selectedTweakCountByCategory,
 }: SidebarProps) {
-  const appCategories: (AppCategory | "all")[] = [
-    "all",
-    "browsers",
-    "gaming",
-    "dev_tools",
-    "multimedia",
-    "communication",
-    "utilities",
-  ];
-
-  const tweakCategories: (TweakCategory | "all")[] = [
-    "all",
-    "privacy",
-    "performance",
-    "appearance",
-    "bloatware",
-  ];
-
   return (
     <aside className="w-60 shrink-0 border-r border-red-900/30 bg-[#0a0a0a] overflow-y-auto">
       <div className="p-4">
@@ -61,17 +55,14 @@ export default function Sidebar({
         </div>
 
         <nav className="space-y-1 mb-6">
-          {appCategories.map((cat) => {
-            const isActive = activeCategory === cat;
-            const label = cat === "all" ? "Todas" : CATEGORY_LABELS[cat];
-            const iconName = cat === "all" ? "LayoutGrid" : CATEGORY_ICONS[cat];
-            const Icon = getIcon(iconName);
-            const count = selectedCountByCategory[cat] || 0;
+          {appCategories.map(({ id, label, emoji }) => {
+            const isActive = activeCategory === id;
+            const count = selectedCountByCategory[id] || 0;
 
             return (
               <button
-                key={cat}
-                onClick={() => onCategoryChange(cat)}
+                key={id}
+                onClick={() => onCategoryChange(id)}
                 className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
                   isActive
                     ? "bg-neon-red/15 text-neon-red border-l-2 border-neon-red"
@@ -79,7 +70,7 @@ export default function Sidebar({
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Icon className="h-4 w-4" />
+                  <span className="text-base">{emoji}</span>
                   <span>{label}</span>
                 </div>
                 {count > 0 && (
@@ -104,19 +95,14 @@ export default function Sidebar({
         </div>
 
         <nav className="space-y-1">
-          {tweakCategories.map((cat) => {
-            const isActive = activeTweakCategory === cat;
-            const label =
-              cat === "all" ? "Todos" : TWEAK_CATEGORY_LABELS[cat];
-            const iconName =
-              cat === "all" ? "LayoutGrid" : TWEAK_CATEGORY_ICONS[cat];
-            const Icon = getIcon(iconName);
-            const count = selectedTweakCountByCategory[cat] || 0;
+          {tweakCategories.map(({ id, label, emoji }) => {
+            const isActive = activeTweakCategory === id;
+            const count = selectedTweakCountByCategory[id] || 0;
 
             return (
               <button
-                key={cat}
-                onClick={() => onTweakCategoryChange(cat)}
+                key={id}
+                onClick={() => onTweakCategoryChange(id)}
                 className={`w-full flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
                   isActive
                     ? "bg-neon-magenta/15 text-neon-magenta border-l-2 border-neon-magenta"
@@ -124,7 +110,7 @@ export default function Sidebar({
                 }`}
               >
                 <div className="flex items-center gap-2.5">
-                  <Icon className="h-4 w-4" />
+                  <span className="text-base">{emoji}</span>
                   <span>{label}</span>
                 </div>
                 {count > 0 && (

@@ -93,7 +93,6 @@ export function useScriptBuilder() {
 
   const totalSelected = selectedAppIds.size + selectedTweakIds.size;
 
-  // Count selected apps per category
   const selectedCountByCategory = useMemo(() => {
     const counts: Record<string, number> = { all: selectedAppIds.size };
     AVAILABLE_APPS.forEach((app) => {
@@ -104,7 +103,6 @@ export function useScriptBuilder() {
     return counts;
   }, [selectedAppIds]);
 
-  // Count selected tweaks per category
   const selectedTweakCountByCategory = useMemo(() => {
     const counts: Record<string, number> = { all: selectedTweakIds.size };
     SYSTEM_TWEAKS.forEach((tweak) => {
