@@ -32,14 +32,6 @@ export default function AppCard({ app, isSelected, onToggle }: AppCardProps) {
         {isSelected && <Check className="h-3 w-3 text-white" />}
       </div>
 
-      {/* Recommended badge */}
-      {app.isRecommended && (
-        <div className="flex items-center gap-1 rounded-full bg-neon-red/10 px-2 py-0.5 text-[10px] font-semibold text-neon-red uppercase tracking-wider">
-          <Star className="h-3 w-3 fill-neon-red" />
-          Recomendado
-        </div>
-      )}
-
       {/* Icon + Name */}
       <div className="flex items-center gap-3">
         <div

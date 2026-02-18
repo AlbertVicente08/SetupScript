@@ -48,7 +48,7 @@ export const AVAILABLE_APPS: App[] = [
     category: "browsers",
     wingetId: "Google.Chrome",
     description: "El navegador más popular del mundo.",
-    icon: "https://cdn.simpleicons.org/googlechrome/ffffff",
+    icon: "https://cdn.simpleicons.org/googlechrome",
     isRecommended: true,
     isFree: true,
   },

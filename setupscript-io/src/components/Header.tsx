@@ -1,5 +1,6 @@
 // src/components/Header.tsx
 
+import Link from "next/link";
 import { Terminal, Github } from "lucide-react";
 
 export default function Header() {
@@ -7,7 +8,7 @@ export default function Header() {
     <header className="w-full border-b border-red-900/30 bg-[#0a0a0a]">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo + Tagline */}
-        <div className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-neon-red/10 border border-neon-red/30">
             <Terminal className="h-5 w-5 text-neon-red" />
           </div>
@@ -19,7 +20,7 @@ export default function Header() {
               Tu PC. Tu Script. En segundos.
             </p>
           </div>
-        </div>
+        </Link>
 
         {/* GitHub Link */}
         <a

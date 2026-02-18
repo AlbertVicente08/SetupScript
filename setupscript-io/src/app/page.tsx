@@ -33,7 +33,7 @@ export default function LandingPage() {
       ═══════════════════════════════════════════════════════════════════ */}
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#080808]/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
             <span className="text-neon-red font-jetbrains font-bold text-lg">{">_"}</span>
             <span className="font-orbitron font-bold text-base tracking-wider">
               SetupScript<span className="text-neon-red">.io</span>
@@ -298,38 +298,37 @@ export default function LandingPage() {
           </motion.p>
 
           <div className="mt-16 grid md:grid-cols-2 gap-6 text-left">
-            {/* ── FREE ──────────────────────────────── */}
+            {/* ── NOOB / FREE ────────────────────────── */}
             <motion.div
               {...fadeUp}
               transition={{ delay: 0.2 }}
               whileHover={{ scale: 1.02, y: -4 }}
               className="rounded-2xl border border-white/10 bg-[#111] p-8"
             >
-              <h3 className="font-syne font-bold text-xl text-white">Hacker</h3>
-              <p className="text-gray-500 text-xs mt-1">Para empezar</p>
+              <h3 className="font-syne font-bold text-xl text-white">NOOB</h3>
+              <p className="text-gray-500 text-xs mt-1">El punto de partida</p>
               <p className="mt-6">
                 <span className="font-orbitron font-black text-5xl text-white">$0</span>
               </p>
 
               <ul className="mt-8 space-y-3">
                 {[
-                  "Scripts PowerShell ilimitados",
-                  `${appCount}+ Apps disponibles`,
-                  `${tweakCount} Tweaks del sistema`,
-                  "Descarga directa .ps1",
-                  "Sin cuenta requerida",
+                  `✅ Instalar ${appCount}+ Apps Ilimitadas`,
+                  "✅ Tweaks Básicos (Solo Visuales)",
+                  "✅ Descarga directa .ps1",
+                  "✅ Sin cuenta requerida",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
-                    <span className="text-neon-red">✓</span> {item}
+                    {item}
                   </li>
                 ))}
                 {[
-                  "Guardar presets",
-                  "URLs compartibles",
-                  "Tweaks expertos",
+                  "❌ Sin Optimizador de FPS (Bloatware/Telemetría bloqueado)",
+                  "⚠️ Espera de 15s al ejecutar el script",
+                  "❌ No permite guardar Presets",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-gray-600">
-                    <span className="text-gray-700">✕</span> {item}
+                    {item}
                   </li>
                 ))}
               </ul>
@@ -342,7 +341,7 @@ export default function LandingPage() {
               </Link>
             </motion.div>
 
-            {/* ── PRO ───────────────────────────────── */}
+            {/* ── GOD MODE / PRO ─────────────────────── */}
             <motion.div
               {...fadeUp}
               transition={{ delay: 0.3 }}
@@ -355,7 +354,7 @@ export default function LandingPage() {
                 🔥 LIFETIME DEAL
               </div>
 
-              <h3 className="font-syne font-bold text-xl text-white">God Mode</h3>
+              <h3 className="font-syne font-bold text-xl text-white">GOD MODE</h3>
               <p className="text-gray-500 text-xs mt-1">Para los que van en serio</p>
               <p className="mt-6 flex items-baseline gap-2">
                 <span className="font-orbitron font-black text-5xl text-neon-red">$9</span>
@@ -365,15 +364,15 @@ export default function LandingPage() {
 
               <ul className="mt-8 space-y-3">
                 {[
-                  "Todo lo de Free",
-                  "☁️ Guardar hasta 10 Presets",
-                  "🔗 URL pública (setupscript.io/tu-setup)",
-                  "🚀 Tweaks Expertos (Deep Debloat)",
-                  "🔔 Acceso anticipado a nuevas features",
-                  "💬 Soporte prioritario por Discord",
+                  "✅ FPS Booster Unlock: Elimina Bloatware, Telemetría y Espionaje",
+                  "✅ Ejecución Instantánea (Sin publicidad/esperas)",
+                  "✅ Cloud Save: Guarda tus configs para siempre",
+                  "✅ Soporte Prioritario por Discord",
+                  "✅ Acceso anticipado a nuevas features",
+                  "✅ URL pública (setupscript.io/tu-setup)",
                 ].map((item) => (
                   <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
-                    <span className="text-neon-red">✓</span> {item}
+                    {item}
                   </li>
                 ))}
               </ul>

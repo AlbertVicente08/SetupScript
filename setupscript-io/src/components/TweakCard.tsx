@@ -2,7 +2,7 @@
 
 import { SystemTweak, TweakRisk } from "@/data/tweaks";
 import * as LucideIcons from "lucide-react";
-import { LucideIcon, Check, AlertTriangle, Monitor } from "lucide-react";
+import { LucideIcon, Check, AlertTriangle, Monitor, Lock } from "lucide-react";
 
 interface TweakCardProps {
   tweak: SystemTweak;
@@ -35,21 +35,34 @@ export default function TweakCard({
 }: TweakCardProps) {
   const Icon = getIcon(tweak.icon);
   const risk = riskConfig[tweak.risk];
+  const isPro = tweak.tier === "pro";
 
   return (
     <button
       onClick={() => onToggle(tweak.id)}
       className={`group relative flex items-start gap-4 rounded-xl p-4 text-left transition-all duration-200 border ${
         isSelected
-          ? "border-neon-magenta bg-[rgba(204,0,255,0.06)] shadow-neon-magenta"
+          ? isPro
+            ? "border-neon-red bg-[rgba(255,26,26,0.06)] shadow-neon-red"
+            : "border-neon-magenta bg-[rgba(204,0,255,0.06)] shadow-neon-magenta"
           : "border-red-900/30 bg-[#111111] hover:border-neon-red hover:bg-[#1a1a1a]"
       }`}
     >
+      {/* PRO badge */}
+      {isPro && (
+        <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-neon-red/15 border border-neon-red/30 px-2 py-0.5 text-[9px] font-bold text-neon-red uppercase tracking-wider">
+          <Lock className="h-2.5 w-2.5" />
+          GOD MODE
+        </div>
+      )}
+
       {/* Toggle indicator */}
       <div
         className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all duration-200 ${
           isSelected
-            ? "border-neon-magenta bg-neon-magenta"
+            ? isPro
+              ? "border-neon-red bg-neon-red"
+              : "border-neon-magenta bg-neon-magenta"
             : "border-gray-600 bg-transparent group-hover:border-neon-red"
         }`}
       >
@@ -60,7 +73,9 @@ export default function TweakCard({
       <div
         className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
           isSelected
-            ? "bg-neon-magenta/20 text-neon-magenta"
+            ? isPro
+              ? "bg-neon-red/20 text-neon-red"
+              : "bg-neon-magenta/20 text-neon-magenta"
             : "bg-[#1a1a1a] text-gray-400 group-hover:text-neon-red"
         }`}
       >
@@ -101,6 +116,14 @@ export default function TweakCard({
           <p className="mt-1 text-[10px] text-yellow-500 flex items-center gap-1">
             <AlertTriangle className="h-2.5 w-2.5" />
             Requiere reinicio
+          </p>
+        )}
+
+        {/* Pro upsell hint */}
+        {isPro && !isSelected && (
+          <p className="mt-1 text-[10px] text-neon-red/60 flex items-center gap-1">
+            <Lock className="h-2.5 w-2.5" />
+            Incluido en el script solo con GOD MODE
           </p>
         )}
       </div>

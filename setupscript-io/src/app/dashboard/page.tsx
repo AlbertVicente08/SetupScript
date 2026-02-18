@@ -129,7 +129,7 @@ export default function DashboardPage() {
                   if (!apps || apps.length === 0) return null;
                   return (
                     <div key={cat}>
-                      <div className="col-span-full mt-8 mb-3 flex items-center gap-3 first:mt-0">
+                      <div className="col-span-full mt-24 mb-6 flex items-center gap-3 first:mt-0">
                         <span className="text-sm font-bold uppercase tracking-widest text-red-500/70">
                           {categoryLabels[cat]}
                         </span>

@@ -4,6 +4,8 @@ export type TweakCategory = "privacy" | "performance" | "appearance" | "bloatwar
 
 export type TweakRisk = "low" | "medium" | "high";
 
+export type TweakTier = "free" | "pro";
+
 export interface SystemTweak {
   id: string;
   name: string;
@@ -15,7 +17,15 @@ export interface SystemTweak {
   revertCommand: string;
   requiresReboot: boolean;
   windowsVersion: "10" | "11" | "10/11";
+  tier: TweakTier;
 }
+
+export const FREE_TWEAK_IDS = [
+  "enable_dark_mode",
+  "show_file_extensions",
+  "show_hidden_files",
+  "taskbar_left_windows11",
+] as const;
 
 export const TWEAK_CATEGORY_LABELS: Record<TweakCategory, string> = {
   privacy: "Privacidad",
@@ -32,7 +42,7 @@ export const TWEAK_CATEGORY_ICONS: Record<TweakCategory, string> = {
 };
 
 export const SYSTEM_TWEAKS: SystemTweak[] = [
-  // ── PRIVACY ───────────────────────────────────────────────────────────────
+  // ── PRIVACY (PRO) ─────────────────────────────────────────────────────────
   {
     id: "disable_telemetry",
     name: "Desactivar Telemetría de Windows",
@@ -41,13 +51,14 @@ export const SYSTEM_TWEAKS: SystemTweak[] = [
     category: "privacy",
     risk: "medium",
     icon: "EyeOff",
+    tier: "pro",
     applyCommand: `# Desactivar Telemetría
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
-reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+reg add "HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 sc config DiagTrack start= disabled
 sc stop DiagTrack`,
     revertCommand: `# Revertir Telemetría
-reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v AllowTelemetry /f
+reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\DataCollection" /v AllowTelemetry /f
 sc config DiagTrack start= auto
 sc start DiagTrack`,
     requiresReboot: false,
@@ -61,12 +72,13 @@ sc start DiagTrack`,
     category: "privacy",
     risk: "low",
     icon: "MicOff",
+    tier: "pro",
     applyCommand: `# Desactivar Cortana
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search" /v CortanaEnabled /t REG_DWORD /d 0 /f`,
+reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Search" /v CortanaEnabled /t REG_DWORD /d 0 /f`,
     revertCommand: `# Revertir Cortana
-reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Windows Search" /v AllowCortana /f
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search" /v CortanaEnabled /t REG_DWORD /d 1 /f`,
+reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\Windows Search" /v AllowCortana /f
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Search" /v CortanaEnabled /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
@@ -78,10 +90,11 @@ reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Search" /v CortanaE
     category: "privacy",
     risk: "low",
     icon: "ShieldOff",
+    tier: "pro",
     applyCommand: `# Desactivar ID Publicitario
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f`,
     revertCommand: `# Revertir ID Publicitario
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 1 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
@@ -93,17 +106,18 @@ reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" /v
     category: "privacy",
     risk: "low",
     icon: "Clock",
+    tier: "pro",
     applyCommand: `# Desactivar Historial de Actividad
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v PublishUserActivities /t REG_DWORD /d 0 /f`,
+reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
+reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v PublishUserActivities /t REG_DWORD /d 0 /f`,
     revertCommand: `# Revertir Historial de Actividad
-reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableActivityFeed /f
-reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v PublishUserActivities /f`,
+reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v EnableActivityFeed /f
+reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v PublishUserActivities /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
 
-  // ── APPEARANCE ────────────────────────────────────────────────────────────
+  // ── APPEARANCE (FREE) ──────────────────────────────────────────────────────
   {
     id: "enable_dark_mode",
     name: "Activar Modo Oscuro",
@@ -112,12 +126,13 @@ reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v PublishUser
     category: "appearance",
     risk: "low",
     icon: "Moon",
+    tier: "free",
     applyCommand: `# Activar Modo Oscuro del Sistema
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f`,
     revertCommand: `# Revertir a Modo Claro
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 1 /f
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 1 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 1 /f
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
@@ -129,10 +144,11 @@ reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize
     category: "appearance",
     risk: "low",
     icon: "Eye",
+    tier: "free",
     applyCommand: `# Mostrar Extensiones de Archivo
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f`,
     revertCommand: `# Ocultar Extensiones de Archivo
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v HideFileExt /t REG_DWORD /d 1 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v HideFileExt /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
@@ -144,10 +160,11 @@ reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
     category: "appearance",
     risk: "low",
     icon: "FolderOpen",
+    tier: "free",
     applyCommand: `# Mostrar Archivos Ocultos
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v Hidden /t REG_DWORD /d 1 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v Hidden /t REG_DWORD /d 1 /f`,
     revertCommand: `# Ocultar Archivos Ocultos
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v Hidden /t REG_DWORD /d 2 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v Hidden /t REG_DWORD /d 2 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
@@ -159,15 +176,16 @@ reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
     category: "appearance",
     risk: "low",
     icon: "AlignLeft",
+    tier: "free",
     applyCommand: `# Taskbar a la izquierda en Windows 11
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f`,
     revertCommand: `# Taskbar centrada en Windows 11
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced" /v TaskbarAl /t REG_DWORD /d 1 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v TaskbarAl /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "11",
   },
 
-  // ── PERFORMANCE ───────────────────────────────────────────────────────────
+  // ── PERFORMANCE (PRO) ──────────────────────────────────────────────────────
   {
     id: "disable_startup_delay",
     name: "Eliminar Delay de Inicio",
@@ -176,10 +194,11 @@ reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced"
     category: "performance",
     risk: "low",
     icon: "Zap",
+    tier: "pro",
     applyCommand: `# Eliminar Delay de Inicio de Windows
-reg add "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize" /v StartupDelayInMSec /t REG_DWORD /d 0 /f`,
+reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Serialize" /v StartupDelayInMSec /t REG_DWORD /d 0 /f`,
     revertCommand: `# Restaurar Delay de Inicio
-reg delete "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serialize" /v StartupDelayInMSec /f`,
+reg delete "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Serialize" /v StartupDelayInMSec /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
@@ -191,12 +210,13 @@ reg delete "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Serial
     category: "performance",
     risk: "low",
     icon: "Gamepad2",
+    tier: "pro",
     applyCommand: `# Desactivar Xbox Game DVR
-reg add "HKCU\\System\\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 0 /f
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f`,
+reg add "HKCU\\\\System\\\\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 0 /f
+reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f`,
     revertCommand: `# Reactivar Xbox Game DVR
-reg add "HKCU\\System\\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 1 /f
-reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR" /v AllowGameDVR /f`,
+reg add "HKCU\\\\System\\\\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 1 /f
+reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\GameDVR" /v AllowGameDVR /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
@@ -208,6 +228,7 @@ reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\GameDVR" /v AllowGameD
     category: "performance",
     risk: "medium",
     icon: "Battery",
+    tier: "pro",
     applyCommand: `# Activar Plan de Energía de Máximo Rendimiento
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
 powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61`,
@@ -217,7 +238,7 @@ powercfg /setactive 381b4222-f694-41f0-9685-ff5bb260df2e`,
     windowsVersion: "10/11",
   },
 
-  // ── BLOATWARE ─────────────────────────────────────────────────────────────
+  // ── BLOATWARE (PRO) ────────────────────────────────────────────────────────
   {
     id: "remove_onedrive",
     name: "Eliminar OneDrive",
@@ -226,18 +247,19 @@ powercfg /setactive 381b4222-f694-41f0-9685-ff5bb260df2e`,
     category: "bloatware",
     risk: "medium",
     icon: "CloudOff",
+    tier: "pro",
     applyCommand: `# Eliminar OneDrive
 taskkill /f /im OneDrive.exe 2>$null
 Start-Sleep -Seconds 2
-if (Test-Path "$env:SYSTEMROOT\\System32\\OneDriveSetup.exe") {
-  & "$env:SYSTEMROOT\\System32\\OneDriveSetup.exe" /uninstall
+if (Test-Path "$env:SYSTEMROOT\\\\System32\\\\OneDriveSetup.exe") {
+  & "$env:SYSTEMROOT\\\\System32\\\\OneDriveSetup.exe" /uninstall
 }
-if (Test-Path "$env:SYSTEMROOT\\SysWOW64\\OneDriveSetup.exe") {
-  & "$env:SYSTEMROOT\\SysWOW64\\OneDriveSetup.exe" /uninstall
+if (Test-Path "$env:SYSTEMROOT\\\\SysWOW64\\\\OneDriveSetup.exe") {
+  & "$env:SYSTEMROOT\\\\SysWOW64\\\\OneDriveSetup.exe" /uninstall
 }
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\OneDrive" /v DisableFileSyncNGSC /t REG_DWORD /d 1 /f`,
+reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\OneDrive" /v DisableFileSyncNGSC /t REG_DWORD /d 1 /f`,
     revertCommand: `# Reinstalar OneDrive (descargar desde Microsoft)
-reg delete "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\OneDrive" /v DisableFileSyncNGSC /f
+reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\OneDrive" /v DisableFileSyncNGSC /f
 Start-Process "winget" -ArgumentList "install Microsoft.OneDrive" -Wait`,
     requiresReboot: false,
     windowsVersion: "10/11",
@@ -250,6 +272,7 @@ Start-Process "winget" -ArgumentList "install Microsoft.OneDrive" -Wait`,
     category: "bloatware",
     risk: "medium",
     icon: "Trash2",
+    tier: "pro",
     applyCommand: `# Eliminar Bloatware de Windows
 $bloatwareApps = @(
   "Microsoft.BingNews",

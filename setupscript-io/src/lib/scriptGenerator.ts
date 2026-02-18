@@ -3,6 +3,20 @@
 import { App } from "@/data/apps";
 import { SystemTweak } from "@/data/tweaks";
 
+const FREE_NAGWARE = `
+Write-Host ""
+Write-Host "  ╔════════════════════════════════════════════════════╗" -ForegroundColor Red
+Write-Host "  ║       VERSIÓN GRATUITA — SetupScript.io            ║" -ForegroundColor Red
+Write-Host "  ║   ¿Quieres eliminar esta espera y ganar FPS?       ║" -ForegroundColor Red
+Write-Host "  ║       Compra el GOD MODE por solo $9               ║" -ForegroundColor Red
+Write-Host "  ║            setupscript.io/pricing                  ║" -ForegroundColor Red
+Write-Host "  ╚════════════════════════════════════════════════════╝" -ForegroundColor Red
+Write-Host ""
+Write-Host "  Esperando 15 segundos..." -ForegroundColor Yellow
+Start-Sleep -Seconds 15
+Write-Host ""
+`;
+
 const SCRIPT_HEADER = `#Requires -RunAsAdministrator
 <#
 .SYNOPSIS
@@ -130,11 +144,21 @@ Write-Host "  ⚠️  Requiere reinicio para surtir efecto." -ForegroundColor Ye
 export interface GeneratorInput {
   selectedApps: App[];
   selectedTweaks: SystemTweak[];
+  isProUser?: boolean;
 }
+
+// IDs de tweaks permitidos en free tier
+const FREE_ALLOWED_TWEAKS = [
+  "enable_dark_mode",
+  "show_file_extensions",
+  "show_hidden_files",
+  "taskbar_left_windows11",
+];
 
 export function generateScript({
   selectedApps,
   selectedTweaks,
+  isProUser = false,
 }: GeneratorInput): string {
   if (selectedApps.length === 0 && selectedTweaks.length === 0) {
     return "# Selecciona aplicaciones o tweaks para generar tu script.";
@@ -150,11 +174,23 @@ export function generateScript({
 
   let script = SCRIPT_HEADER.replace("{DATE}", date);
 
+  // ── NAGWARE para Free Users ──
+  if (!isProUser) {
+    script += FREE_NAGWARE;
+  }
+
+  // Filtrar tweaks según tier
+  let tweaksToApply = selectedTweaks;
+  if (!isProUser) {
+    tweaksToApply = selectedTweaks.filter((t) =>
+      FREE_ALLOWED_TWEAKS.includes(t.id),
+    );
+  }
+
   // Sección de Apps
   if (selectedApps.length > 0) {
     script += APPS_SECTION_HEADER;
 
-    // Agrupar por categoría para mejor legibilidad
     const byCategory = selectedApps.reduce(
       (acc, app) => {
         if (!acc[app.category]) acc[app.category] = [];
@@ -173,10 +209,29 @@ export function generateScript({
   }
 
   // Sección de Tweaks
-  if (selectedTweaks.length > 0) {
+  if (tweaksToApply.length > 0) {
     script += TWEAKS_SECTION_HEADER;
-    for (const tweak of selectedTweaks) {
+    for (const tweak of tweaksToApply) {
       script += generateTweakBlock(tweak);
+    }
+  }
+
+  // Mostrar tweaks omitidos si es free
+  if (!isProUser) {
+    const skippedTweaks = selectedTweaks.filter(
+      (t) => !FREE_ALLOWED_TWEAKS.includes(t.id),
+    );
+    if (skippedTweaks.length > 0) {
+      script += `\n
+# ─────────────────────────────────────────────────────────────────
+# ⚠️  TWEAKS OMITIDOS (Requieren GOD MODE)
+# ─────────────────────────────────────────────────────────────────
+Write-Host ""
+Write-Host "  ⚠️  Se omitieron ${skippedTweaks.length} tweak(s) que requieren GOD MODE:" -ForegroundColor Yellow`;
+      for (const t of skippedTweaks) {
+        script += `\nWrite-Host "     🔒 ${t.name}" -ForegroundColor DarkGray`;
+      }
+      script += `\nWrite-Host "  👉 Compra GOD MODE en setupscript.io/pricing" -ForegroundColor Red\nWrite-Host ""`;
     }
   }
 
