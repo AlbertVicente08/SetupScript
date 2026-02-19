@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   Download,
@@ -7,8 +5,12 @@ import {
   Eye,
   Check,
   Trash2,
+  FileCode,
 } from "lucide-react";
-import { downloadScript, copyToClipboard } from "@/lib/scriptGenerator";
+import {
+  generateAndDownloadZip,
+  copyToClipboard,
+} from "@/lib/scriptGenerator";
 
 interface ActionBarProps {
   totalSelected: number;
@@ -29,8 +31,6 @@ export default function ActionBar({
 }: ActionBarProps) {
   const [copied, setCopied] = useState(false);
 
-  const psFilename = "setupscript.ps1";
-
   const handleCopy = async () => {
     const success = await copyToClipboard(script);
     if (success) {
@@ -39,11 +39,9 @@ export default function ActionBar({
     }
   };
 
-  const handleDownload = () => {
-    downloadScript(script, psFilename);
+  const handleDownloadZip = () => {
+    generateAndDownloadZip(script);
   };
-
-
 
   if (totalSelected === 0) return null;
 
@@ -64,7 +62,7 @@ export default function ActionBar({
           </div>
           <div className="h-4 w-px bg-red-900/30" />
           <span className="text-sm font-semibold text-white">
-            {totalSelected} seleccionados
+            {totalSelected} selected
           </span>
         </div>
 
@@ -76,7 +74,7 @@ export default function ActionBar({
             className="flex items-center gap-2 rounded-lg border border-red-900/30 bg-[#111111] px-3 py-2 text-sm text-gray-400 transition-all duration-200 hover:border-neon-red hover:text-neon-red"
           >
             <Trash2 className="h-4 w-4" />
-            <span className="hidden sm:inline">Limpiar</span>
+            <span className="hidden sm:inline">Clear</span>
           </button>
 
           {/* Preview Button */}
@@ -85,7 +83,7 @@ export default function ActionBar({
             className="flex items-center gap-2 rounded-lg border border-red-900/30 bg-[#111111] px-3 py-2 text-sm text-gray-400 transition-all duration-200 hover:border-neon-magenta hover:text-neon-magenta"
           >
             <Eye className="h-4 w-4" />
-            <span className="hidden sm:inline">Ver Script</span>
+            <span className="hidden sm:inline">View Script</span>
           </button>
 
           {/* Copy Button */}
@@ -99,24 +97,27 @@ export default function ActionBar({
             {copied ? (
               <>
                 <Check className="h-4 w-4" />
-                <span className="hidden sm:inline">¡Copiado!</span>
+                <span className="hidden sm:inline">Copied!</span>
               </>
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                <span className="hidden sm:inline">Copiar</span>
+                <span className="hidden sm:inline">Copy</span>
               </>
             )}
           </button>
 
-          {/* Download Buttons */}
+          <div className="h-6 w-px bg-white/10 mx-2" />
+
+          {/* Download Buttons Group */}
           <div className="flex items-center gap-2">
             <button
-              onClick={handleDownload}
-              className="flex items-center gap-2 rounded-lg bg-neon-red px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-neon-red"
+              onClick={handleDownloadZip}
+              title="Download .zip package"
+              className="flex items-center gap-2 rounded-lg bg-neon-red px-4 py-2 text-sm font-semibold text-white shadow-neon-red transition-all duration-200 hover:bg-red-600 hover:scale-105"
             >
-              <Download className="h-4 w-4" />
-              <span>Download .ps1</span>
+              <FileCode className="h-4 w-4" />
+              <span>Download ZIP</span>
             </button>
           </div>
         </div>
@@ -124,3 +125,4 @@ export default function ActionBar({
     </div>
   );
 }
+

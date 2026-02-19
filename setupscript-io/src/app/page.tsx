@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { AVAILABLE_APPS } from "@/data/apps";
 import { SYSTEM_TWEAKS } from "@/data/tweaks";
+import { Play } from "lucide-react";
+import DemoVideo from "@/components/DemoVideo";
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -41,16 +43,16 @@ export default function LandingPage() {
           </Link>
           <div className="flex items-center gap-6">
             <a href="#features" className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:block">
-              Características
+              Features
             </a>
             <a href="#pricing" className="text-sm text-gray-400 hover:text-white transition-colors hidden sm:block">
-              Precios
+              Pricing
             </a>
             <Link
               href="/dashboard"
               className="rounded-lg bg-neon-red px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-red-600 hover:shadow-neon-red"
             >
-              Abrir Dashboard →
+              Open Dashboard →
             </Link>
           </div>
         </div>
@@ -67,7 +69,7 @@ export default function LandingPage() {
           {/* Badge */}
           <motion.div {...fadeUp} className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-gray-300">
             <span className="text-neon-red">⚡</span>
-            Gratis · Open Source · Sin Registro
+            Free · Open Source · No Registration
           </motion.div>
 
           {/* H1 */}
@@ -76,13 +78,13 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-orbitron font-black text-5xl md:text-7xl leading-tight tracking-tight"
           >
-            Tu PC. Tu{" "}
+            Your PC. Your{" "}
             <span className="text-neon-red" style={{ textShadow: "0 0 40px rgba(255,26,26,0.6)" }}>
               Script
             </span>
             .
             <br />
-            En segundos.
+            In seconds.
           </motion.h1>
 
           {/* Sub */}
@@ -91,30 +93,33 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mx-auto mt-6 max-w-2xl font-jetbrains text-sm md:text-base text-gray-400 leading-relaxed"
           >
-            &quot;Genera un PowerShell personalizado. Instala apps, activa tweaks, optimiza Windows.
-            Para Gamers, Devs y power users.&quot;
+            &quot;Generate a custom PowerShell script. Install apps, apply tweaks, optimize Windows.
+            For Gamers, Devs, and Power Users.&quot;
           </motion.p>
 
           {/* CTAs */}
           <motion.div
             {...fadeUp}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="mt-10 flex flex-wrap items-center justify-center gap-4"
           >
             <Link
               href="/dashboard"
-              className="rounded-xl bg-neon-red px-8 py-3.5 font-syne font-bold text-white text-base transition-all hover:bg-red-600 hover:shadow-neon-red hover:scale-105"
+              className="group relative flex items-center gap-2 rounded-full bg-neon-red px-8 py-4 text-lg font-bold text-white shadow-neon-red transition-all hover:bg-red-600 hover:scale-105"
             >
-              ⚡ Crear mi Script — Es Gratis
+              Start Generating
+              <span className="opacity-70 group-hover:translate-x-1 transition-transform">
+                →
+              </span>
             </Link>
-            <a
-              href="https://github.com/AlbertVicente08/SetupScript"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-xl border border-white/20 px-8 py-3.5 font-syne font-semibold text-white text-base transition-all hover:bg-white/5 hover:border-white/40"
+            
+            <button
+               onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+               className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-white transition-all hover:bg-white/10 hover:border-white/20"
             >
-              Ver en GitHub →
-            </a>
+              <Play className="fill-current h-4 w-4" />
+              Watch Demo
+            </button>
           </motion.div>
 
           {/* Stats */}
@@ -125,17 +130,17 @@ export default function LandingPage() {
           >
             <div>
               <span className="font-bold text-white text-lg">{appCount}+</span>
-              <p className="text-xs">Apps disponibles</p>
+              <p className="text-xs">Available Apps</p>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div>
               <span className="font-bold text-white text-lg">{tweakCount}</span>
-              <p className="text-xs">Tweaks del sistema</p>
+              <p className="text-xs">System Tweaks</p>
             </div>
             <div className="w-px h-8 bg-white/10" />
             <div>
               <span className="font-bold text-white text-lg">0</span>
-              <p className="text-xs">Registro necesario</p>
+              <p className="text-xs">Registration Required</p>
             </div>
           </motion.div>
 
@@ -178,9 +183,9 @@ export default function LandingPage() {
                 </div>
                 {/* Mini action bar */}
                 <div className="mt-4 flex items-center justify-between rounded-lg bg-[#0a0a0a] px-4 py-2">
-                  <span className="text-[10px] text-gray-500">6 apps seleccionadas</span>
+                  <span className="text-[10px] text-gray-500">6 apps selected</span>
                   <div className="rounded bg-neon-red/80 px-3 py-1 text-[10px] font-medium text-white">
-                    Descargar .ps1
+                    Download .ps1
                   </div>
                 </div>
               </div>
@@ -198,20 +203,20 @@ export default function LandingPage() {
             {...fadeUp}
             className="font-orbitron font-bold text-3xl md:text-4xl text-center mb-16"
           >
-            ¿Cuánto tardas en tener tu PC{" "}
-            <span className="text-neon-red">lista</span>?
+            How long does it take to get your PC{" "}
+            <span className="text-neon-red">ready</span>?
           </motion.h2>
 
           <motion.div {...fadeUp} transition={{ delay: 0.1 }} className="grid md:grid-cols-2 gap-8">
             {/* Before */}
             <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-8">
-              <h3 className="text-sm font-bold text-red-400 uppercase tracking-widest mb-6">Antes</h3>
+              <h3 className="text-sm font-bold text-red-400 uppercase tracking-widest mb-6">Before</h3>
               <ul className="space-y-4">
                 {[
-                  "Descargar instaladores uno a uno",
-                  "Olvidar qué apps tenías",
-                  "Configurar todo manualmente",
-                  "Telemetría activada por defecto",
+                  "Downloading installers one by one",
+                  "Forgetting which apps you had",
+                  "Configuring everything manually",
+                  "Telemetry enabled by default",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-gray-400">
                     <span className="text-red-500 text-base mt-0.5">✕</span>
@@ -223,13 +228,13 @@ export default function LandingPage() {
 
             {/* After */}
             <div className="rounded-2xl border border-neon-red/20 bg-neon-red/[0.03] p-8">
-              <h3 className="text-sm font-bold text-neon-red uppercase tracking-widest mb-6">Ahora</h3>
+              <h3 className="text-sm font-bold text-neon-red uppercase tracking-widest mb-6">Now</h3>
               <ul className="space-y-4">
                 {[
-                  "Un script. Una ejecución.",
-                  "Tu setup reproducible siempre",
-                  "PC optimizada automáticamente",
-                  "Privacy tweaks incluidos",
+                  "One script. One execution.",
+                  "Your setup is always reproducible",
+                  "PC optimized automatically",
+                  "Privacy tweaks included",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3 text-gray-200">
                     <span className="text-neon-red text-base mt-0.5">✓</span>
@@ -243,6 +248,11 @@ export default function LandingPage() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════════
+          DEMO VIDEO
+      ═══════════════════════════════════════════════════════════════════ */}
+      <DemoVideo />
+
+      {/* ═══════════════════════════════════════════════════════════════════
           FEATURES GRID
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="py-24 px-6 bg-[#0a0a0a]">
@@ -251,21 +261,21 @@ export default function LandingPage() {
             {...fadeUp}
             className="font-orbitron font-bold text-3xl md:text-4xl text-center mb-4"
           >
-            Todo en un{" "}
+            All in one{" "}
             <span className="text-neon-red">script</span>
           </motion.h2>
           <motion.p {...fadeUp} transition={{ delay: 0.1 }} className="text-center text-gray-500 mb-16 text-sm">
-            Selecciona, genera y ejecuta. Así de simple.
+            Select, generate, and execute. Simple as that.
           </motion.p>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { emoji: "⚡", title: `${appCount}+ Apps con logo real`, desc: "Elige entre browsers, IDEs, herramientas gaming y más" },
-              { emoji: "🔧", title: `${tweakCount} Tweaks del sistema`, desc: "Desactiva telemetría, activa modo oscuro, rendimiento máximo" },
-              { emoji: "📋", title: "Preview en tiempo real", desc: "Ve el PowerShell generarse mientras seleccionas apps" },
-              { emoji: "🎯", title: "Sin cuenta, sin límites", desc: "Descarga tu script directamente. El plan free es real" },
-              { emoji: "☁️", title: "Presets en la nube", desc: "Guarda tu configuración con cuenta Pro y recupérala siempre" },
-              { emoji: "🔗", title: "Comparte tu setup", desc: "URL pública para compartir tu configuración con amigos" },
+              { emoji: "⚡", title: `${appCount}+ Apps with real logos`, desc: "Choose from Browsers, IDEs, Gaming tools, and more" },
+              { emoji: "🔧", title: `${tweakCount} System Tweaks`, desc: "Disable telemetry, enable dark mode, max performance" },
+              { emoji: "📋", title: "Real-time Preview", desc: "Watch the PowerShell script generate as you select apps" },
+              { emoji: "🎯", title: "No account, no limits", desc: "Download your script directly. The free plan is real" },
+              { emoji: "☁️", title: "Cloud Presets", desc: "Save your configuration with Pro account and restore it anytime" },
+              { emoji: "🔗", title: "Share your setup", desc: "Public URL to share your configuration with friends" },
             ].map((feat, i) => (
               <motion.div
                 key={feat.title}
@@ -291,44 +301,39 @@ export default function LandingPage() {
             {...fadeUp}
             className="font-orbitron font-bold text-3xl md:text-4xl"
           >
-            Sin suscripciones.
+            No subscriptions.
           </motion.h2>
           <motion.p {...fadeUp} transition={{ delay: 0.1 }} className="mt-2 text-gray-500 text-base">
-            Un pago. Para siempre.
+            One payment. Forever.
           </motion.p>
 
-          <div className="mt-16 grid md:grid-cols-2 gap-6 text-left">
-            {/* ── NOOB / FREE ────────────────────────── */}
+          <div className="mt-16 grid md:grid-cols-2 gap-6 text-left max-w-4xl mx-auto">
+            {/* ── FREE ──────────────────────────────── */}
             <motion.div
               {...fadeUp}
               transition={{ delay: 0.2 }}
               whileHover={{ scale: 1.02, y: -4 }}
               className="rounded-2xl border border-white/10 bg-[#111] p-8"
             >
-              <h3 className="font-syne font-bold text-xl text-white">NOOB</h3>
-              <p className="text-gray-500 text-xs mt-1">El punto de partida</p>
+              <h3 className="font-syne font-bold text-xl text-white">FREE</h3>
               <p className="mt-6">
                 <span className="font-orbitron font-black text-5xl text-white">$0</span>
               </p>
 
               <ul className="mt-8 space-y-3">
+                <li className="flex items-center gap-2 text-sm text-gray-300">
+                  <span className="text-neon-red">✓</span> 5 essential apps included:
+                </li>
+                <li className="pl-6 text-xs text-gray-500">
+                  Chrome, VS Code, Steam, VLC, 7-Zip
+                </li>
                 {[
-                  `✅ Instalar ${appCount}+ Apps Ilimitadas`,
-                  "✅ Tweaks Básicos (Solo Visuales)",
-                  "✅ Descarga directa .ps1",
-                  "✅ Sin cuenta requerida",
+                  "15-second wait",
+                  "SetupScript.io branded in script",
+                  "No tweaks",
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
-                    {item}
-                  </li>
-                ))}
-                {[
-                  "❌ Sin Optimizador de FPS (Bloatware/Telemetría bloqueado)",
-                  "⚠️ Espera de 15s al ejecutar el script",
-                  "❌ No permite guardar Presets",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-sm text-gray-600">
-                    {item}
+                  <li key={item} className="flex items-center gap-2 text-sm text-gray-500">
+                    <span className="text-gray-600">•</span> {item}
                   </li>
                 ))}
               </ul>
@@ -337,51 +342,65 @@ export default function LandingPage() {
                 href="/dashboard"
                 className="mt-8 block w-full rounded-xl border border-white/20 py-3 text-center text-sm font-semibold text-white transition-all hover:bg-white/5"
               >
-                Empezar Gratis
+                Start for Free
               </Link>
             </motion.div>
 
-            {/* ── GOD MODE / PRO ─────────────────────── */}
+            {/* ── GOD MODE ──────────────────────────── */}
             <motion.div
               {...fadeUp}
               transition={{ delay: 0.3 }}
               whileHover={{ scale: 1.02, y: -4 }}
-              className="relative rounded-2xl border border-neon-red/50 bg-[#111] p-8"
-              style={{ boxShadow: "0 0 30px rgba(255,26,26,0.3)" }}
+              className="relative overflow-hidden rounded-2xl border border-neon-red/30 bg-neon-red/5 p-8 shadow-[0_0_40px_rgba(255,26,26,0.1)]"
             >
-              {/* Badge */}
-              <div className="absolute -top-3 left-6 rounded-full bg-neon-red px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-white">
-                🔥 LIFETIME DEAL
+              <div className="absolute -top-12 -right-12 h-24 w-24 bg-neon-red/20 blur-2xl rounded-full" />
+              <div className="absolute top-0 right-0 rounded-bl-xl bg-neon-red px-3 py-1 text-xs font-bold text-white shadow-lg">
+                LIFETIME DEAL
               </div>
 
-              <h3 className="font-syne font-bold text-xl text-white">GOD MODE</h3>
-              <p className="text-gray-500 text-xs mt-1">Para los que van en serio</p>
-              <p className="mt-6 flex items-baseline gap-2">
-                <span className="font-orbitron font-black text-5xl text-neon-red">$9</span>
-                <s className="text-gray-600 text-lg">$49</s>
+              <h3 className="font-orbitron text-2xl font-bold text-white">
+                GOD MODE
+              </h3>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="text-4xl font-bold text-white">$9</span>
+                <span className="text-lg text-gray-500 line-through decoration-neon-red/50 decoration-2">$49</span>
+                <span className="text-sm font-semibold text-neon-red/80 uppercase tracking-wider">/ one-time</span>
+              </div>
+              <p className="mt-1 text-xs text-gray-400">One-time payment · Yours forever</p>
+              
+              <p className="mt-4 text-sm text-gray-400">
+                Unlock the full potential of your PC.
               </p>
-              <p className="text-xs text-gray-500 mt-1">Pago único · Tuyo para siempre</p>
 
-              <ul className="mt-8 space-y-3">
+              <ul className="mt-8 space-y-4">
                 {[
-                  "✅ FPS Booster Unlock: Elimina Bloatware, Telemetría y Espionaje",
-                  "✅ Ejecución Instantánea (Sin publicidad/esperas)",
-                  "✅ Cloud Save: Guarda tus configs para siempre",
-                  "✅ Soporte Prioritario por Discord",
-                  "✅ Acceso anticipado a nuevas features",
-                  "✅ URL pública (setupscript.io/tu-setup)",
-                ].map((item) => (
-                  <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
-                    {item}
+                  "Unlimited App Installs",
+                  "Access All 50+ Tweaks",
+                  "Remove 15s Wait Timer",
+                  "Remove 'Free Version' Branding",
+                  "Support Future Development",
+                  "Priority Support",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3 text-sm text-gray-300">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-neon-red/20 text-neon-red">
+                      ✓
+                    </span>
+                    {feature}
                   </li>
                 ))}
               </ul>
 
-              <button className="mt-8 block w-full rounded-xl bg-neon-red py-3 text-center text-sm font-bold text-white transition-all hover:bg-neon-magenta hover:shadow-neon-magenta">
-                Obtener God Mode — $9
-              </button>
-              <p className="mt-3 text-center text-[10px] text-gray-600">
-                Pago seguro via Stripe · Sin sorpresas
+              <a
+                href="https://buy.stripe.com/5kA9BPcsk2O80Fy4gg"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 block w-full rounded-lg bg-neon-red py-3 text-center text-sm font-bold text-white shadow-neon-red transition-all hover:bg-red-600 hover:scale-[1.02]"
+              >
+                Get God Mode — $9
+              </a>
+              <p className="mt-3 text-[10px] text-center text-gray-500 flex items-center justify-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-green-500/50 inline-block" />
+                Secure payment via Stripe · No surprises
               </p>
             </motion.div>
           </div>
@@ -397,7 +416,7 @@ export default function LandingPage() {
             <span className="text-neon-red font-jetbrains font-bold">{">_"}</span>
             <div>
               <span className="font-orbitron font-bold text-sm">SetupScript<span className="text-neon-red">.io</span></span>
-              <p className="text-[10px] text-gray-600">Tu PC. Tu Script. En segundos.</p>
+              <p className="text-[10px] text-gray-600">Your PC. Your Script. In seconds.</p>
             </div>
           </div>
 
@@ -408,7 +427,7 @@ export default function LandingPage() {
           </div>
 
           <p className="text-[10px] text-gray-700">
-            © 2025 SetupScript.io · Hecho con ❤️ y mucho PowerShell
+            © 2025 SetupScript.io · Made with ❤️ and lots of PowerShell
           </p>
         </div>
       </footer>

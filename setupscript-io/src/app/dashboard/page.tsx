@@ -22,13 +22,13 @@ const categoryOrder: AppCategory[] = [
 ];
 
 const categoryLabels: Record<string, string> = {
-  browsers: "🌐 Navegadores",
+  browsers: "🌐 Browsers",
   devtools: "💻 Dev Tools",
   gaming: "🎮 Gaming",
-  creativity: "🎨 Creatividad",
+  creativity: "🎨 Creativity",
   multimedia: "🎵 Multimedia",
-  communication: "💬 Comunicación",
-  utilities: "🔧 Utilidades",
+  communication: "💬 Communication",
+  utilities: "🔧 Utilities",
 };
 
 export default function DashboardPage() {
@@ -50,6 +50,10 @@ export default function DashboardPage() {
     totalSelected,
     selectedCountByCategory,
     selectedTweakCountByCategory,
+    isGodMode,
+    setIsGodMode,
+    isAppLocked,
+    isTweakLocked,
   } = useScriptBuilder();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -86,19 +90,19 @@ export default function DashboardPage() {
             {/* ── Stats ──────────────────────────────────── */}
             <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
               <div className="rounded-xl border border-red-900/30 bg-[#111111] p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Apps Disponibles</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">Available Apps</p>
                 <p className="mt-1 text-2xl font-bold text-neon-red">{AVAILABLE_APPS.length}</p>
               </div>
               <div className="rounded-xl border border-red-900/30 bg-[#111111] p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Tweaks del Sistema</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">System Tweaks</p>
                 <p className="mt-1 text-2xl font-bold text-neon-magenta">12</p>
               </div>
               <div className="rounded-xl border border-red-900/30 bg-[#111111] p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Apps Seleccionadas</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">Selected Apps</p>
                 <p className="mt-1 text-2xl font-bold text-white">{selectedAppIds.size}</p>
               </div>
               <div className="rounded-xl border border-red-900/30 bg-[#111111] p-4">
-                <p className="text-xs text-gray-500 uppercase tracking-wider">Tweaks Activos</p>
+                <p className="text-xs text-gray-500 uppercase tracking-wider">Active Tweaks</p>
                 <p className="mt-1 text-2xl font-bold text-white">{selectedTweakIds.size}</p>
               </div>
             </div>
@@ -115,7 +119,7 @@ export default function DashboardPage() {
                       : "bg-[#111111] text-gray-400 border border-red-900/30"
                   }`}
                 >
-                  {cat === "all" ? "⚡ Todas" : categoryLabels[cat]}
+                  {cat === "all" ? "⚡ All" : categoryLabels[cat]}
                 </button>
               ))}
             </div>
@@ -136,12 +140,13 @@ export default function DashboardPage() {
                         <div className="flex-1 h-px bg-white/5" />
                         <span className="text-xs text-gray-600">{apps.length}</span>
                       </div>
-                      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {apps.map((app) => (
                           <AppCard
                             key={app.id}
                             app={app}
                             isSelected={selectedAppIds.has(app.id)}
+                            isLocked={isAppLocked(app.id)}
                             onToggle={toggleApp}
                           />
                         ))}
@@ -151,12 +156,13 @@ export default function DashboardPage() {
                 })
               ) : (
                 // Filtered view
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {filteredApps.map((app) => (
                     <AppCard
                       key={app.id}
                       app={app}
                       isSelected={selectedAppIds.has(app.id)}
+                      isLocked={isAppLocked(app.id)}
                       onToggle={toggleApp}
                     />
                   ))}
@@ -168,7 +174,7 @@ export default function DashboardPage() {
             <section className="mb-10">
               <div className="flex items-center gap-2 mb-4">
                 <Settings className="h-5 w-5 text-neon-magenta" />
-                <h2 className="text-lg font-bold text-white">Tweaks del Sistema</h2>
+                <h2 className="text-lg font-bold text-white">System Tweaks</h2>
                 <span className="ml-2 text-sm text-gray-500">({filteredTweaks.length})</span>
               </div>
 
@@ -183,18 +189,19 @@ export default function DashboardPage() {
                         : "bg-[#111111] text-gray-400 border border-red-900/30"
                     }`}
                   >
-                    {cat === "all" ? "Todos" : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                    {cat === "all" ? "All" : cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </button>
                 ))}
               </div>
 
-              <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                 {filteredTweaks.map((tweak) => (
                   <TweakCard
                     key={tweak.id}
                     tweak={tweak}
                     isSelected={selectedTweakIds.has(tweak.id)}
                     onToggle={toggleTweak}
+                    isLocked={isTweakLocked(tweak.id)}
                   />
                 ))}
               </div>
@@ -205,10 +212,10 @@ export default function DashboardPage() {
                 <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-neon-red/10 border border-neon-red/20 mb-4">
                   <Sparkles className="h-8 w-8 text-neon-red/50" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-300">Selecciona apps y tweaks</h3>
+                <h3 className="text-lg font-semibold text-gray-300">Select apps and tweaks</h3>
                 <p className="mt-2 max-w-sm text-sm text-gray-500">
-                  Elige las aplicaciones que quieres instalar y los tweaks que deseas aplicar.
-                  Tu script de PowerShell se generará automáticamente.
+                  Select the applications you want to install and the tweaks you want to apply.
+                  Your PowerShell script will be generated automatically.
                 </p>
               </div>
             )}

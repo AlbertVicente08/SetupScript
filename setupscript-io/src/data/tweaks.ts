@@ -22,15 +22,13 @@ export interface SystemTweak {
 
 export const FREE_TWEAK_IDS = [
   "enable_dark_mode",
-  "show_file_extensions",
   "show_hidden_files",
-  "taskbar_left_windows11",
 ] as const;
 
 export const TWEAK_CATEGORY_LABELS: Record<TweakCategory, string> = {
-  privacy: "Privacidad",
-  performance: "Rendimiento",
-  appearance: "Apariencia",
+  privacy: "Privacy",
+  performance: "Performance",
+  appearance: "Appearance",
   bloatware: "Bloatware",
 };
 
@@ -45,19 +43,19 @@ export const SYSTEM_TWEAKS: SystemTweak[] = [
   // ── PRIVACY (PRO) ─────────────────────────────────────────────────────────
   {
     id: "disable_telemetry",
-    name: "Desactivar Telemetría de Windows",
+    name: "Disable Windows Telemetry",
     description:
-      "Evita que Windows envíe datos de uso y diagnóstico a Microsoft.",
+      "Prevents Windows from sending usage and diagnostic data to Microsoft.",
     category: "privacy",
     risk: "medium",
     icon: "EyeOff",
     tier: "pro",
-    applyCommand: `# Desactivar Telemetría
+    applyCommand: `# Disable Telemetry
 reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 reg add "HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 sc config DiagTrack start= disabled
 sc stop DiagTrack`,
-    revertCommand: `# Revertir Telemetría
+    revertCommand: `# Revert Telemetry
 reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\DataCollection" /v AllowTelemetry /f
 sc config DiagTrack start= auto
 sc start DiagTrack`,
@@ -66,17 +64,17 @@ sc start DiagTrack`,
   },
   {
     id: "disable_cortana",
-    name: "Desactivar Cortana",
+    name: "Disable Cortana",
     description:
-      "Deshabilita el asistente de voz de Microsoft para mejorar privacidad y rendimiento.",
+      "Disables Microsoft's voice assistant for better privacy and performance.",
     category: "privacy",
     risk: "low",
     icon: "MicOff",
     tier: "pro",
-    applyCommand: `# Desactivar Cortana
+    applyCommand: `# Disable Cortana
 reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\Windows Search" /v AllowCortana /t REG_DWORD /d 0 /f
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Search" /v CortanaEnabled /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Revertir Cortana
+    revertCommand: `# Revert Cortana
 reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\Windows Search" /v AllowCortana /f
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Search" /v CortanaEnabled /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
@@ -84,33 +82,33 @@ reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Search" /
   },
   {
     id: "disable_advertising_id",
-    name: "Desactivar ID Publicitario",
+    name: "Disable Advertising ID",
     description:
-      "Impide que las apps rastreen tu comportamiento para anuncios personalizados.",
+      "Prevents apps from tracking your behavior for personalized ads.",
     category: "privacy",
     risk: "low",
     icon: "ShieldOff",
     tier: "pro",
-    applyCommand: `# Desactivar ID Publicitario
+    applyCommand: `# Disable Advertising ID
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Revertir ID Publicitario
+    revertCommand: `# Revert Advertising ID
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
   {
     id: "disable_activity_history",
-    name: "Desactivar Historial de Actividad",
+    name: "Disable Activity History",
     description:
-      "Elimina el seguimiento de actividades y la línea de tiempo de Windows.",
+      "Removes activity tracking and the Windows Timeline feature.",
     category: "privacy",
     risk: "low",
     icon: "Clock",
     tier: "pro",
-    applyCommand: `# Desactivar Historial de Actividad
+    applyCommand: `# Disable Activity History
 reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
 reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v PublishUserActivities /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Revertir Historial de Actividad
+    revertCommand: `# Revert Activity History
 reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v EnableActivityFeed /f
 reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v PublishUserActivities /f`,
     requiresReboot: false,
@@ -120,17 +118,17 @@ reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\System" /v P
   // ── APPEARANCE (FREE) ──────────────────────────────────────────────────────
   {
     id: "enable_dark_mode",
-    name: "Activar Modo Oscuro",
+    name: "Enable Dark Mode",
     description:
-      "Habilita el tema oscuro del sistema para apps y el explorador de Windows.",
+      "Enables system dark mode for apps and Windows Explorer.",
     category: "appearance",
     risk: "low",
     icon: "Moon",
     tier: "free",
-    applyCommand: `# Activar Modo Oscuro del Sistema
+    applyCommand: `# Enable System Dark Mode
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Revertir a Modo Claro
+    revertCommand: `# Revert to Light Mode
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 1 /f
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
@@ -138,48 +136,48 @@ reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Themes\\\
   },
   {
     id: "show_file_extensions",
-    name: "Mostrar Extensiones de Archivo",
+    name: "Show File Extensions",
     description:
-      "Muestra las extensiones de todos los archivos en el Explorador (recomendado para seguridad).",
+      "Shows extensions for all files in Explorer (recommended for security).",
     category: "appearance",
     risk: "low",
     icon: "Eye",
-    tier: "free",
-    applyCommand: `# Mostrar Extensiones de Archivo
+    tier: "pro",
+    applyCommand: `# Show File Extensions
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v HideFileExt /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Ocultar Extensiones de Archivo
+    revertCommand: `# Hide File Extensions
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v HideFileExt /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
   {
     id: "show_hidden_files",
-    name: "Mostrar Archivos Ocultos",
+    name: "Show Hidden Files",
     description:
-      "Hace visibles los archivos y carpetas ocultos del sistema en el Explorador.",
+      "Makes hidden system files and folders visible in Explorer.",
     category: "appearance",
     risk: "low",
     icon: "FolderOpen",
     tier: "free",
-    applyCommand: `# Mostrar Archivos Ocultos
+    applyCommand: `# Show Hidden Files
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v Hidden /t REG_DWORD /d 1 /f`,
-    revertCommand: `# Ocultar Archivos Ocultos
+    revertCommand: `# Hide Hidden Files
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v Hidden /t REG_DWORD /d 2 /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
   {
     id: "taskbar_left_windows11",
-    name: "Alinear Taskbar a la Izquierda (Win 11)",
+    name: "Align Taskbar to Left (Win 11)",
     description:
-      "Mueve los iconos de la barra de tareas de Windows 11 al estilo clásico (izquierda).",
+      "Moves Windows 11 taskbar icons to the classic style (left).",
     category: "appearance",
     risk: "low",
     icon: "AlignLeft",
-    tier: "free",
-    applyCommand: `# Taskbar a la izquierda en Windows 11
+    tier: "pro",
+    applyCommand: `# Taskbar Left Windows 11
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v TaskbarAl /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Taskbar centrada en Windows 11
+    revertCommand: `# Taskbar Centered Windows 11
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Advanced" /v TaskbarAl /t REG_DWORD /d 1 /f`,
     requiresReboot: false,
     windowsVersion: "11",
@@ -188,33 +186,33 @@ reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\
   // ── PERFORMANCE (PRO) ──────────────────────────────────────────────────────
   {
     id: "disable_startup_delay",
-    name: "Eliminar Delay de Inicio",
+    name: "Remove Startup Delay",
     description:
-      "Elimina el retraso artificial al iniciar apps del startup de Windows.",
+      "Removes the artificial delay when launching startup apps.",
     category: "performance",
     risk: "low",
     icon: "Zap",
     tier: "pro",
-    applyCommand: `# Eliminar Delay de Inicio de Windows
+    applyCommand: `# Remove Startup Delay
 reg add "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Serialize" /v StartupDelayInMSec /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Restaurar Delay de Inicio
+    revertCommand: `# Restore Startup Delay
 reg delete "HKCU\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Explorer\\\\Serialize" /v StartupDelayInMSec /f`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },
   {
     id: "disable_xbox_game_dvr",
-    name: "Desactivar Xbox Game DVR",
+    name: "Disable Xbox Game DVR",
     description:
-      "Deshabilita la grabación en background de Xbox para ganar rendimiento en juegos.",
+      "Disables Xbox background recording to gain gaming performance.",
     category: "performance",
     risk: "low",
     icon: "Gamepad2",
     tier: "pro",
-    applyCommand: `# Desactivar Xbox Game DVR
+    applyCommand: `# Disable Xbox Game DVR
 reg add "HKCU\\\\System\\\\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 0 /f
 reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f`,
-    revertCommand: `# Reactivar Xbox Game DVR
+    revertCommand: `# Enable Xbox Game DVR
 reg add "HKCU\\\\System\\\\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 1 /f
 reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\GameDVR" /v AllowGameDVR /f`,
     requiresReboot: false,
@@ -222,17 +220,17 @@ reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\GameDVR" /v 
   },
   {
     id: "enable_ultimate_performance",
-    name: "Plan de Energía: Máximo Rendimiento",
+    name: "Power Plan: Ultimate Performance",
     description:
-      "Activa el plan de energía oculto 'Máximo Rendimiento' de Windows (ideal para sobremesa).",
+      "Activates the hidden 'Ultimate Performance' power plan (best for desktops).",
     category: "performance",
     risk: "medium",
     icon: "Battery",
     tier: "pro",
-    applyCommand: `# Activar Plan de Energía de Máximo Rendimiento
+    applyCommand: `# Enable Ultimate Performance Power Plan
 powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
 powercfg /setactive e9a42b02-d5df-448d-aa00-03f14749eb61`,
-    revertCommand: `# Volver al plan Equilibrado
+    revertCommand: `# Revert to Balanced Plan
 powercfg /setactive 381b4222-f694-41f0-9685-ff5bb260df2e`,
     requiresReboot: false,
     windowsVersion: "10/11",
@@ -241,14 +239,14 @@ powercfg /setactive 381b4222-f694-41f0-9685-ff5bb260df2e`,
   // ── BLOATWARE (PRO) ────────────────────────────────────────────────────────
   {
     id: "remove_onedrive",
-    name: "Eliminar OneDrive",
+    name: "Remove OneDrive",
     description:
-      "Desinstala OneDrive y evita que se reinstale automáticamente.",
+      "Uninstalls OneDrive and prevents it from reinstalling automatically.",
     category: "bloatware",
     risk: "medium",
     icon: "CloudOff",
     tier: "pro",
-    applyCommand: `# Eliminar OneDrive
+    applyCommand: `# Remove OneDrive
 taskkill /f /im OneDrive.exe 2>$null
 Start-Sleep -Seconds 2
 if (Test-Path "$env:SYSTEMROOT\\\\System32\\\\OneDriveSetup.exe") {
@@ -258,7 +256,7 @@ if (Test-Path "$env:SYSTEMROOT\\\\SysWOW64\\\\OneDriveSetup.exe") {
   & "$env:SYSTEMROOT\\\\SysWOW64\\\\OneDriveSetup.exe" /uninstall
 }
 reg add "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\OneDrive" /v DisableFileSyncNGSC /t REG_DWORD /d 1 /f`,
-    revertCommand: `# Reinstalar OneDrive (descargar desde Microsoft)
+    revertCommand: `# Reinstall OneDrive (download from Microsoft)
 reg delete "HKLM\\\\SOFTWARE\\\\Policies\\\\Microsoft\\\\Windows\\\\OneDrive" /v DisableFileSyncNGSC /f
 Start-Process "winget" -ArgumentList "install Microsoft.OneDrive" -Wait`,
     requiresReboot: false,
@@ -266,14 +264,14 @@ Start-Process "winget" -ArgumentList "install Microsoft.OneDrive" -Wait`,
   },
   {
     id: "remove_bloatware_apps",
-    name: "Eliminar Apps Preinstaladas",
+    name: "Remove Preinstalled Apps",
     description:
-      "Desinstala apps de Windows que vienen preinstaladas y nadie usa (Xbox, Maps, News, etc.).",
+      "Uninstalls preinstalled Windows apps that nobody uses (Xbox, Maps, News, etc.).",
     category: "bloatware",
     risk: "medium",
     icon: "Trash2",
     tier: "pro",
-    applyCommand: `# Eliminar Bloatware de Windows
+    applyCommand: `# Remove Windows Bloatware
 $bloatwareApps = @(
   "Microsoft.BingNews",
   "Microsoft.BingWeather",
@@ -292,12 +290,12 @@ $bloatwareApps = @(
   "MicrosoftTeams"
 )
 foreach ($app in $bloatwareApps) {
-  Write-Host "Removiendo: $app"
+  Write-Host "Removing: $app"
   Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
   Get-AppxProvisionedPackage -Online | Where-Object DisplayName -like $app | Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
 }`,
-    revertCommand: `# No es posible revertir automáticamente la eliminación de bloatware. Reinstalar desde Microsoft Store si es necesario.
-Write-Host "Para reinstalar apps de Windows, visita Microsoft Store."`,
+    revertCommand: `# Cannot automatically revert bloatware removal. Reinstall from Microsoft Store if needed.
+Write-Host "To reinstall Windows apps, visit Microsoft Store."`,
     requiresReboot: false,
     windowsVersion: "10/11",
   },

@@ -6,15 +6,15 @@ const config: Config = {
     extend: {
       colors: {
         neon: {
-          red: "#ff1a1a",
+          red: "#b91c1c", // Refined from #ff1a1a
           magenta: "#cc00ff",
           crimson: "#8b0000",
         },
       },
       boxShadow: {
-        "neon-red": "0 0 12px rgba(255,26,26,0.5)",
+        "neon-red": "0 0 12px rgba(185, 28, 28, 0.5)",
         "neon-magenta": "0 0 12px rgba(204,0,255,0.5)",
-        "neon-card": "0 0 0 1px #ff1a1a, 0 0 15px rgba(255,26,26,0.2)",
+        "neon-card": "0 0 0 1px #b91c1c, 0 0 15px rgba(185, 28, 28, 0.2)",
       },
       fontFamily: {
         mono: ["JetBrains Mono", "monospace"],
@@ -30,7 +30,7 @@ const config: Config = {
     themes: [
       {
         setupscript: {
-          primary: "#ff1a1a",
+          primary: "#b91c1c",
           "primary-content": "#ffffff",
           secondary: "#cc00ff",
           "secondary-content": "#ffffff",
@@ -45,7 +45,7 @@ const config: Config = {
           info: "#cc00ff",
           success: "#22c55e",
           warning: "#fbbf24",
-          error: "#ff1a1a",
+          error: "#b91c1c",
         },
       },
     ],

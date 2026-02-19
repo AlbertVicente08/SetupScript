@@ -2,43 +2,62 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { AVAILABLE_APPS, AppCategory } from "@/data/apps";
-import { SYSTEM_TWEAKS, TweakCategory } from "@/data/tweaks";
+import { SYSTEM_TWEAKS, TweakCategory, FREE_TWEAK_IDS } from "@/data/tweaks";
 import { generateScript } from "@/lib/scriptGenerator";
+
+// Whitelist for free users
+const FREE_APPS_WHITELIST = new Set([
+  "google_chrome",
+  "vscode",
+  "steam",
+  "vlc",
+  "7zip",
+]);
 
 export function useScriptBuilder() {
   const [selectedAppIds, setSelectedAppIds] = useState<Set<string>>(new Set());
-  const [selectedTweakIds, setSelectedTweakIds] = useState<Set<string>>(
-    new Set(),
-  );
-  const [activeCategory, setActiveCategory] = useState<AppCategory | "all">(
-    "all",
-  );
-  const [activeTweakCategory, setActiveTweakCategory] = useState<
-    TweakCategory | "all"
-  >("all");
+  const [selectedTweakIds, setSelectedTweakIds] = useState<Set<string>>(new Set());
+  const [activeCategory, setActiveCategory] = useState<AppCategory | "all">("all");
+  const [activeTweakCategory, setActiveTweakCategory] = useState<TweakCategory | "all">("all");
+  const [isGodMode, setIsGodMode] = useState(false); // Default to free tier
 
   const toggleApp = useCallback((id: string) => {
     setSelectedAppIds((prev) => {
       const next = new Set(prev);
+      // Enforce whitelist for free users
+      if (!isGodMode && !FREE_APPS_WHITELIST.has(id)) {
+        return next; // Do nothing if locked
+      }
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-  }, []);
+  }, [isGodMode]);
 
   const toggleTweak = useCallback((id: string) => {
     setSelectedTweakIds((prev) => {
       const next = new Set(prev);
+      // Enforce whitelist for free users
+      const isFree = (FREE_TWEAK_IDS as readonly string[]).includes(id);
+      if (!isGodMode && !isFree) {
+         return next; // Do nothing if locked
+      }
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-  }, []);
+  }, [isGodMode]);
 
   const selectAllAppsInCategory = useCallback(
     (category: AppCategory | "all") => {
-      const appsInCategory =
+      let appsInCategory =
         category === "all"
           ? AVAILABLE_APPS
           : AVAILABLE_APPS.filter((app) => app.category === category);
+
+      // Filter for free tier if not in God Mode
+      if (!isGodMode) {
+        appsInCategory = appsInCategory.filter(app => FREE_APPS_WHITELIST.has(app.id));
+      }
+
       setSelectedAppIds((prev) => {
         const next = new Set(prev);
         const allSelected = appsInCategory.every((app) => next.has(app.id));
@@ -50,7 +69,7 @@ export function useScriptBuilder() {
         return next;
       });
     },
-    [],
+    [isGodMode],
   );
 
   const clearAll = useCallback(() => {
@@ -113,6 +132,15 @@ export function useScriptBuilder() {
     return counts;
   }, [selectedTweakIds]);
 
+  const isAppLocked = useCallback((id: string) => {
+    return !isGodMode && !FREE_APPS_WHITELIST.has(id);
+  }, [isGodMode]);
+
+  const isTweakLocked = useCallback((id: string) => {
+    const isFree = (FREE_TWEAK_IDS as readonly string[]).includes(id);
+    return !isGodMode && !isFree;
+  }, [isGodMode]);
+
   return {
     selectedAppIds,
     selectedTweakIds,
@@ -132,5 +160,9 @@ export function useScriptBuilder() {
     totalSelected,
     selectedCountByCategory,
     selectedTweakCountByCategory,
+    isGodMode,
+    setIsGodMode,
+    isAppLocked,
+    isTweakLocked,
   };
 }

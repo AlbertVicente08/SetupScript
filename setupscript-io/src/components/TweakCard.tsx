@@ -1,132 +1,172 @@
 "use client";
 
 import { SystemTweak, TweakRisk } from "@/data/tweaks";
-import * as LucideIcons from "lucide-react";
-import { LucideIcon, Check, AlertTriangle, Monitor, Lock } from "lucide-react";
+import {
+  Shield,
+  Zap,
+  Palette,
+  Trash2,
+  AlertTriangle,
+  Monitor,
+  Lock,
+  Check,
+  LucideIcon,
+  Mic,
+  MicOff,
+  Eye,
+  EyeOff,
+  Clock,
+  Moon,
+  FolderOpen,
+  AlignLeft,
+  Gamepad2,
+  Battery,
+  CloudOff,
+} from "lucide-react";
+import { motion } from "framer-motion";
 
 interface TweakCardProps {
   tweak: SystemTweak;
   isSelected: boolean;
   onToggle: (id: string) => void;
+  isLocked?: boolean;
 }
 
-function getIcon(iconName: string): LucideIcon {
-  const icons = LucideIcons as unknown as Record<string, LucideIcon>;
-  return icons[iconName] || LucideIcons.HelpCircle;
-}
+const ICONS: Record<string, LucideIcon> = {
+  ShieldOff: Shield,
+  Zap: Zap,
+  Palette: Palette,
+  Trash2: Trash2,
+  MicOff: MicOff,
+  EyeOff: EyeOff,
+  Clock: Clock,
+  Moon: Moon,
+  Eye: Eye,
+  FolderOpen: FolderOpen,
+  AlignLeft: AlignLeft,
+  Gamepad2: Gamepad2,
+  Battery: Battery,
+  CloudOff: CloudOff,
+  // Fallbacks or extras just in case
+  Shield: Shield,
+  Mic: Mic,
+};
 
 const riskConfig: Record<
   TweakRisk,
   { label: string; color: string; bg: string }
 > = {
-  low: { label: "Bajo", color: "text-green-400", bg: "bg-green-400/10" },
+  low: { label: "Low", color: "text-green-400", bg: "bg-green-400/10" },
   medium: {
-    label: "Medio",
+    label: "Medium",
     color: "text-yellow-400",
     bg: "bg-yellow-400/10",
   },
-  high: { label: "Alto", color: "text-neon-red", bg: "bg-neon-red/10" },
+  high: { label: "High", color: "text-neon-red", bg: "bg-neon-red/10" },
 };
 
 export default function TweakCard({
   tweak,
   isSelected,
   onToggle,
+  isLocked = false,
 }: TweakCardProps) {
-  const Icon = getIcon(tweak.icon);
+  const Icon = ICONS[tweak.icon] || Zap;
   const risk = riskConfig[tweak.risk];
   const isPro = tweak.tier === "pro";
 
   return (
-    <button
-      onClick={() => onToggle(tweak.id)}
-      className={`group relative flex items-start gap-4 rounded-xl p-4 text-left transition-all duration-200 border ${
-        isSelected
-          ? isPro
-            ? "border-neon-red bg-[rgba(255,26,26,0.06)] shadow-neon-red"
-            : "border-neon-magenta bg-[rgba(204,0,255,0.06)] shadow-neon-magenta"
-          : "border-red-900/30 bg-[#111111] hover:border-neon-red hover:bg-[#1a1a1a]"
+    <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className={`group relative flex flex-col justify-between rounded-xl border p-4 transition-all duration-300 ${
+        isLocked
+          ? "cursor-not-allowed border-white/5 bg-white/[0.02] opacity-50 grayscale"
+          : isSelected
+          ? "border-neon-red/50 bg-neon-red/10 shadow-[0_0_20px_rgba(255,26,26,0.1)]"
+          : "hover:border-white/20 hover:bg-white/5 border-white/10 bg-[#111]"
       }`}
+      onClick={() => !isLocked && onToggle(tweak.id)}
     >
-      {/* PRO badge */}
-      {isPro && (
-        <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-neon-red/15 border border-neon-red/30 px-2 py-0.5 text-[9px] font-bold text-neon-red uppercase tracking-wider">
-          <Lock className="h-2.5 w-2.5" />
-          GOD MODE
-        </div>
-      )}
-
-      {/* Toggle indicator */}
-      <div
-        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-all duration-200 ${
-          isSelected
-            ? isPro
-              ? "border-neon-red bg-neon-red"
-              : "border-neon-magenta bg-neon-magenta"
-            : "border-gray-600 bg-transparent group-hover:border-neon-red"
-        }`}
-      >
-        {isSelected && <Check className="h-3 w-3 text-white" />}
-      </div>
-
-      {/* Icon */}
-      <div
-        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all duration-200 ${
-          isSelected
-            ? isPro
-              ? "bg-neon-red/20 text-neon-red"
-              : "bg-neon-magenta/20 text-neon-magenta"
-            : "bg-[#1a1a1a] text-gray-400 group-hover:text-neon-red"
-        }`}
-      >
-        <Icon className="h-4 w-4" />
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <h3
-            className={`text-sm font-semibold transition-colors duration-200 ${
-              isSelected ? "text-white" : "text-gray-200"
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-3">
+          <div
+            className={`rounded-lg p-2 transition-colors ${
+              isLocked
+                ? "bg-white/5 text-gray-500"
+                : isSelected
+                ? "bg-neon-red/20 text-neon-red"
+                : "bg-white/5 text-gray-400 group-hover:text-white"
             }`}
           >
-            {tweak.name}
-          </h3>
+            <Icon size={20} />
+          </div>
+          <div>
+            <h3
+              className={`font-bold text-sm ${
+                isLocked ? "text-gray-500" : "text-white"
+              }`}
+            >
+              {tweak.name}
+            </h3>
+            <div className="flex items-center gap-2 mt-1">
+              {/* Risk Badge */}
+              <span
+                className={`text-[10px] uppercase tracking-wider font-bold px-1.5 py-0.5 rounded ${risk.bg} ${risk.color}`}
+              >
+                {tweak.risk === "high"
+                  ? "High Risk"
+                  : tweak.risk === "medium"
+                  ? "Med Risk"
+                  : "Safe"}
+              </span>
 
-          {/* Risk badge */}
-          <span
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${risk.bg} ${risk.color}`}
-          >
-            {tweak.risk !== "low" && <AlertTriangle className="h-2.5 w-2.5" />}
-            {risk.label}
-          </span>
-
-          {/* Windows version badge */}
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#1a1a1a] px-2 py-0.5 text-[10px] text-gray-500">
-            <Monitor className="h-2.5 w-2.5" />
-            Win {tweak.windowsVersion}
-          </span>
+              {/* Pro Badge - Show even if locked to indicate why */}
+              {isPro && (
+                <span className="text-[10px] font-bold text-neon-red px-1.5 py-0.5 bg-neon-red/10 rounded border border-neon-red/20">
+                  GOD MODE
+                </span>
+              )}
+            </div>
+          </div>
         </div>
 
-        <p className="mt-1 text-xs text-gray-500 line-clamp-2">
-          {tweak.description}
-        </p>
-
-        {tweak.requiresReboot && (
-          <p className="mt-1 text-[10px] text-yellow-500 flex items-center gap-1">
-            <AlertTriangle className="h-2.5 w-2.5" />
-            Requiere reinicio
-          </p>
-        )}
-
-        {/* Pro upsell hint */}
-        {isPro && !isSelected && (
-          <p className="mt-1 text-[10px] text-neon-red/60 flex items-center gap-1">
-            <Lock className="h-2.5 w-2.5" />
-            Incluido en el script solo con GOD MODE
-          </p>
-        )}
+        {/* Checkbox / Lock */}
+        <div
+          className={`h-6 w-6 rounded-full border flex items-center justify-center transition-all ${
+            isLocked
+              ? "border-white/10 bg-white/5 text-gray-500"
+              : isSelected
+              ? "border-neon-red bg-neon-red text-white"
+              : "border-white/20 bg-transparent group-hover:border-white/40"
+          }`}
+        >
+          {isLocked ? (
+            <Lock size={12} />
+          ) : isSelected ? (
+            <Check size={14} />
+          ) : null}
+        </div>
       </div>
-    </button>
+
+      {/* Description */}
+      <p className="mt-3 text-xs text-gray-400 leading-relaxed line-clamp-2">
+        {tweak.description}
+      </p>
+
+      {/* Footer Info */}
+      <div className="mt-4 flex items-center justify-between border-t border-white/5 pt-3">
+        <div className="flex items-center gap-2 text-[10px] text-gray-500">
+          {tweak.requiresReboot && (
+            <span className="flex items-center gap-1 text-yellow-500/80">
+              <AlertTriangle size={10} />
+              Reboot required
+            </span>
+          )}
+        </div>
+      </div>
+    </motion.div>
   );
 }

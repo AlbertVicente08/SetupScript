@@ -53,13 +53,17 @@ export default function ScriptModal({
         <div className="flex items-center justify-between border-b border-red-900/30 px-6 py-4">
           <div>
             <h2 className="text-lg font-bold text-white">
-              Vista previa del script
+              Script Preview
             </h2>
             <p className="text-xs text-gray-500 mt-0.5">
               {appCount} apps · {tweakCount} tweaks ·{" "}
               <span className="text-neon-magenta font-mono">
                 setupscript.ps1
               </span>
+            </p>
+            <p className="mt-2 text-xs font-semibold text-neon-red bg-red-900/10 border border-red-900/30 px-2 py-1 rounded inline-block">
+              Right-click the .ps1 file → Run with PowerShell. Windows will ask for
+              admin permission automatically.
             </p>
           </div>
 
@@ -78,7 +82,7 @@ export default function ScriptModal({
               ) : (
                 <Copy className="h-4 w-4" />
               )}
-              {copied ? "¡Copiado!" : "Copiar"}
+              {copied ? "Copied!" : "Copy"}
             </button>
 
             {/* Download */}
@@ -87,7 +91,7 @@ export default function ScriptModal({
               className="flex items-center gap-2 rounded-lg bg-neon-red px-3 py-1.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-red-600"
             >
               <Download className="h-4 w-4" />
-              Descargar
+              Download
             </button>
 
             {/* Close */}

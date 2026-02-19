@@ -17,7 +17,7 @@ export default function Header() {
               SetupScript<span className="text-neon-magenta">.io</span>
             </h1>
             <p className="text-xs text-gray-500 hidden sm:block">
-              Tu PC. Tu Script. En segundos.
+              Your PC. Your Script. In seconds.
             </p>
           </div>
         </Link>

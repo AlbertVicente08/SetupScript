@@ -1,35 +1,44 @@
 "use client";
 
-import { App } from "@/data/apps";
-import { Check, Star } from "lucide-react";
+import { Check, Star, Lock } from "lucide-react";
 
 interface AppCardProps {
   app: App;
   isSelected: boolean;
+  isLocked?: boolean;
   onToggle: (id: string) => void;
 }
 
-export default function AppCard({ app, isSelected, onToggle }: AppCardProps) {
+export default function AppCard({ app, isSelected, isLocked = false, onToggle }: AppCardProps) {
   const isUrl = app.icon?.startsWith("http");
 
   return (
     <button
-      onClick={() => onToggle(app.id)}
-      className={`group relative flex flex-col items-start gap-3 rounded-xl p-4 text-left transition-all duration-200 border ${
-        isSelected
-          ? "border-neon-red bg-[rgba(255,26,26,0.08)] shadow-neon-red"
-          : "border-red-900/30 bg-[#111111] hover:border-neon-magenta hover:bg-[#1a1a1a]"
+      onClick={() => !isLocked && onToggle(app.id)}
+      disabled={isLocked}
+      className={`group relative flex flex-col items-start gap-3 rounded-xl p-6 text-left transition-all duration-200 glass-card ${
+        isLocked
+          ? "opacity-40 cursor-not-allowed grayscale"
+          : isSelected
+          ? "glass-card selected"
+          : "hover:bg-[rgba(255,255,255,0.05)]"
       }`}
     >
-      {/* Selection indicator */}
+      {/* Selection indicator or Lock */}
       <div
         className={`absolute top-3 right-3 flex h-5 w-5 items-center justify-center rounded-md border transition-all duration-200 ${
-          isSelected
+          isLocked
+            ? "border-transparent bg-transparent"
+            : isSelected
             ? "border-neon-red bg-neon-red"
             : "border-gray-600 bg-transparent group-hover:border-neon-magenta"
         }`}
       >
-        {isSelected && <Check className="h-3 w-3 text-white" />}
+        {isLocked ? (
+          <Lock className="h-4 w-4 text-gray-400" />
+        ) : (
+          isSelected && <Check className="h-3 w-3 text-white" />
+        )}
       </div>
 
       {/* Icon + Name */}
@@ -56,7 +65,7 @@ export default function AppCard({ app, isSelected, onToggle }: AppCardProps) {
         </div>
         <div>
           <h3
-            className={`text-sm font-semibold transition-colors duration-200 ${
+            className={`text-sm font-bold tracking-tight transition-colors duration-200 ${
               isSelected ? "text-white" : "text-gray-200"
             }`}
           >

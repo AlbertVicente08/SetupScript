@@ -17,21 +17,21 @@ interface SidebarProps {
 }
 
 const appCategories: { id: AppCategory | "all"; label: string; emoji: string }[] = [
-  { id: "all", label: "Todas", emoji: "⚡" },
-  { id: "browsers", label: "Navegadores", emoji: "🌐" },
+  { id: "all", label: "All", emoji: "⚡" },
+  { id: "browsers", label: "Browsers", emoji: "🌐" },
   { id: "devtools", label: "Dev Tools", emoji: "💻" },
   { id: "gaming", label: "Gaming", emoji: "🎮" },
-  { id: "creativity", label: "Creatividad", emoji: "🎨" },
+  { id: "creativity", label: "Creativity", emoji: "🎨" },
   { id: "multimedia", label: "Multimedia", emoji: "🎵" },
-  { id: "communication", label: "Comunicación", emoji: "💬" },
-  { id: "utilities", label: "Utilidades", emoji: "🔧" },
+  { id: "communication", label: "Communication", emoji: "💬" },
+  { id: "utilities", label: "Utilities", emoji: "🔧" },
 ];
 
 const tweakCategories: { id: TweakCategory | "all"; label: string; emoji: string }[] = [
-  { id: "all", label: "Todos", emoji: "⚙️" },
-  { id: "privacy", label: "Privacidad", emoji: "🔒" },
-  { id: "performance", label: "Rendimiento", emoji: "⚡" },
-  { id: "appearance", label: "Apariencia", emoji: "🎨" },
+  { id: "all", label: "All", emoji: "⚙️" },
+  { id: "privacy", label: "Privacy", emoji: "🔒" },
+  { id: "performance", label: "Performance", emoji: "⚡" },
+  { id: "appearance", label: "Appearance", emoji: "🎨" },
   { id: "bloatware", label: "Bloatware", emoji: "🗑️" },
 ];
 
@@ -50,7 +50,7 @@ export default function Sidebar({
         <div className="flex items-center gap-2 mb-3">
           <Layers className="h-4 w-4 text-neon-red" />
           <h2 className="text-sm font-semibold text-neon-red uppercase tracking-wider">
-            Aplicaciones
+            Applications
           </h2>
         </div>
 
