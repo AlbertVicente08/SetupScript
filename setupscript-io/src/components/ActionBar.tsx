@@ -29,6 +29,8 @@ export default function ActionBar({
 }: ActionBarProps) {
   const [copied, setCopied] = useState(false);
 
+  const psFilename = "setupscript.ps1";
+
   const handleCopy = async () => {
     const success = await copyToClipboard(script);
     if (success) {
@@ -38,8 +40,10 @@ export default function ActionBar({
   };
 
   const handleDownload = () => {
-    downloadScript(script);
+    downloadScript(script, psFilename);
   };
+
+
 
   if (totalSelected === 0) return null;
 
@@ -87,11 +91,10 @@ export default function ActionBar({
           {/* Copy Button */}
           <button
             onClick={handleCopy}
-            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all duration-200 ${
-              copied
-                ? "border-green-500 bg-green-500/10 text-green-400"
-                : "border-red-900/30 bg-[#111111] text-gray-400 hover:border-neon-magenta hover:text-neon-magenta"
-            }`}
+            className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all duration-200 ${copied
+              ? "border-green-500 bg-green-500/10 text-green-400"
+              : "border-red-900/30 bg-[#111111] text-gray-400 hover:border-neon-magenta hover:text-neon-magenta"
+              }`}
           >
             {copied ? (
               <>
@@ -106,14 +109,16 @@ export default function ActionBar({
             )}
           </button>
 
-          {/* Download Button (CTA) */}
-          <button
-            onClick={handleDownload}
-            className="flex items-center gap-2 rounded-lg bg-neon-red px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-neon-red"
-          >
-            <Download className="h-4 w-4" />
-            <span>Descargar .ps1</span>
-          </button>
+          {/* Download Buttons */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleDownload}
+              className="flex items-center gap-2 rounded-lg bg-neon-red px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-red-600 hover:shadow-neon-red"
+            >
+              <Download className="h-4 w-4" />
+              <span>Download .ps1</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

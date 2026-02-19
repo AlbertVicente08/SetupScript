@@ -17,8 +17,7 @@ Start-Sleep -Seconds 15
 Write-Host ""
 `;
 
-const SCRIPT_HEADER = `#Requires -RunAsAdministrator
-<#
+const SCRIPT_HEADER = `<#
 .SYNOPSIS
     Script generado por SetupScript.io
 .DESCRIPTION
@@ -26,13 +25,20 @@ const SCRIPT_HEADER = `#Requires -RunAsAdministrator
     Generado el: {DATE}
     
     ⚠️  INSTRUCCIONES DE USO:
-    1. Haz clic derecho en el archivo .ps1
-    2. Selecciona "Ejecutar con PowerShell"
-    3. Si aparece un aviso de seguridad, escribe: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-    4. Acepta los permisos de administrador cuando se soliciten.
+    1. Haz clic derecho en el archivo .ps1 y selecciona "Ejecutar con PowerShell"
+    2. O simplemente ejecuta el archivo setup.bat incluido.
     
     Este script fue generado en SetupScript.io - https://setupscript.io
 #>
+
+# ─────────────────────────────────────────────────────────────────
+# AUTO-ELEVACIÓN A ADMINISTRADOR
+# ─────────────────────────────────────────────────────────────────
+if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
+    $arguments = "& '" + $myinvocation.mycommand.definition + "'"
+    Start-Process powershell -Verb runAs -ArgumentList $arguments
+    Break
+}
 
 # ─────────────────────────────────────────────────────────────────
 # CONFIGURACIÓN INICIAL
@@ -47,14 +53,6 @@ Write-Host "  ║         SetupScript.io — Setup Automático        ║" -Fore
 Write-Host "  ╚═══════════════════════════════════════════════════╝" -ForegroundColor Red
 Write-Host "  Iniciando instalación automatizada..." -ForegroundColor White
 Write-Host ""
-
-# Verificar permisos de administrador
-if (-NOT ([Security.Principal.WindowsPrincipal]
-  [Security.Principal.WindowsIdentity]::GetCurrent()
-).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-  Write-Error "Ejecuta este script como Administrador." -ErrorAction Stop
-}
-Write-Host "[OK] Permisos verificados." -ForegroundColor Green
 
 # Verificar winget disponible
 if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
@@ -94,8 +92,7 @@ if ($errors.Count -eq 0) {
 Write-Host "  Generado por SetupScript.io" -ForegroundColor Magenta
 Write-Host "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━" -ForegroundColor Red
 Write-Host ""
-Write-Host "Presiona cualquier tecla para cerrar..."
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+Read-Host "Presiona Enter para cerrar"
 `;
 
 export function generateInstallBlock(app: App): string {
@@ -244,7 +241,14 @@ export function downloadScript(
   scriptContent: string,
   filename = "setupscript.ps1",
 ): void {
-  const blob = new Blob([scriptContent], { type: "text/plain;charset=utf-8" });
+  const bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+  const encoder = new TextEncoder();
+  const encoded = encoder.encode(scriptContent);
+  const withBom = new Uint8Array(bom.length + encoded.length);
+  withBom.set(bom, 0);
+  withBom.set(encoded, bom.length);
+
+  const blob = new Blob([withBom], { type: "application/octet-stream" });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
@@ -264,3 +268,6 @@ export async function copyToClipboard(text: string): Promise<boolean> {
     return false;
   }
 }
+
+// Función para generar el contenido del archivo batch launcher
+
