@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Terminal, Github } from "lucide-react";
+import AuthIndicator from "./AuthIndicator";
 
 export default function Header() {
   return (
@@ -23,15 +24,18 @@ export default function Header() {
         </Link>
 
         {/* GitHub Link */}
-        <a
-          href="https://github.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 rounded-lg border border-red-900/30 bg-[#111111] px-4 py-2 text-sm text-gray-400 transition-all duration-200 hover:border-neon-magenta hover:text-neon-magenta"
-        >
-          <Github className="h-4 w-4" />
-          <span className="hidden sm:inline">GitHub</span>
-        </a>
+        <div className="flex items-center gap-4">
+          <AuthIndicator />
+          <a
+            href="https://github.com/AlbertVicente08/SetupScript"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 rounded-lg border border-red-900/30 bg-[#111111] px-4 py-2 text-sm text-gray-400 transition-all duration-200 hover:border-neon-magenta hover:text-neon-magenta"
+          >
+            <Github className="h-4 w-4" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
+        </div>
       </div>
     </header>
   );

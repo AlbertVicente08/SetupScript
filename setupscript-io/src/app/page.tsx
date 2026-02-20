@@ -2,10 +2,13 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { AVAILABLE_APPS } from "@/data/apps";
 import { SYSTEM_TWEAKS } from "@/data/tweaks";
 import { Play } from "lucide-react";
 import DemoVideo from "@/components/DemoVideo";
+import AuthModal from "@/components/AuthModal";
 
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
@@ -27,6 +30,55 @@ const mockCards = [
 export default function LandingPage() {
   const appCount = AVAILABLE_APPS.length;
   const tweakCount = SYSTEM_TWEAKS.length;
+
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isPro, setIsPro] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("checkout") === "true") {
+      // Return from Google Auth login
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user?.email) {
+          fetch('/api/checkout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: session.user.email })
+          })
+            .then(res => res.json())
+            .then(data => {
+              if (data.url) window.location.href = data.url;
+            });
+        }
+      });
+    }
+
+    if (params.get("success") === "true") {
+      setIsPro(true);
+      window.history.replaceState({}, '', '/');
+    } else {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          supabase.from('users').select('is_pro').eq('id', session.user.id).single()
+            .then(({ data }) => {
+              if (data?.is_pro) setIsPro(true);
+            });
+        }
+      });
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const { data } = await supabase.from('users').select('is_pro').eq('id', session.user.id).single();
+        setIsPro(!!data?.is_pro);
+      } else {
+        setIsPro(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#080808] text-white overflow-x-hidden">
@@ -112,10 +164,10 @@ export default function LandingPage() {
                 →
               </span>
             </Link>
-            
+
             <button
-               onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
-               className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-white transition-all hover:bg-white/10 hover:border-white/20"
+              onClick={() => document.getElementById('demo')?.scrollIntoView({ behavior: 'smooth' })}
+              className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-8 py-4 text-lg font-bold text-white transition-all hover:bg-white/10 hover:border-white/20"
             >
               <Play className="fill-current h-4 w-4" />
               Watch Demo
@@ -367,7 +419,7 @@ export default function LandingPage() {
                 <span className="text-sm font-semibold text-neon-red/80 uppercase tracking-wider">/ one-time</span>
               </div>
               <p className="mt-1 text-xs text-gray-400">One-time payment · Yours forever</p>
-              
+
               <p className="mt-4 text-sm text-gray-400">
                 Unlock the full potential of your PC.
               </p>
@@ -390,14 +442,12 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <a
-                href="https://buy.stripe.com/5kA9BPcsk2O80Fy4gg"
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => setIsAuthModalOpen(true)}
                 className="mt-8 block w-full rounded-lg bg-neon-red py-3 text-center text-sm font-bold text-white shadow-neon-red transition-all hover:bg-red-600 hover:scale-[1.02]"
               >
-                Get God Mode — $9
-              </a>
+                {isPro ? "God Mode Active" : "Get God Mode — $9"}
+              </button>
               <p className="mt-3 text-[10px] text-center text-gray-500 flex items-center justify-center gap-1">
                 <span className="w-2 h-2 rounded-full bg-green-500/50 inline-block" />
                 Secure payment via Stripe · No surprises
@@ -431,6 +481,27 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        onSuccess={() => {
+          // Attempt checkout immediately
+          supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session?.user?.email) {
+              fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: session.user.email })
+              })
+                .then(res => res.json())
+                .then(data => {
+                  if (data.url) window.location.href = data.url;
+                });
+            }
+          });
+        }}
+      />
     </div>
   );
 }
